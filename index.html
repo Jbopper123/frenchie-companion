@@ -186,12 +186,28 @@ const LEVELS = [
 ];
 const level = t => LEVELS.find(l => t <= l.max);
 
+// The place search only matches one place name, so "Monkstown Cork" is split: try the longest name first,
+// and use the leftover words (county, country) to pick the right match. Irish matches win ties.
+const SKIP = new Set(['co', 'co.', 'county', 'ireland', 'republic', 'of']);
+async function search(name) {
+  const r = await fetch('https://geocoding-api.open-meteo.com/v1/search?count=20&name=' + encodeURIComponent(name));
+  if (!r.ok) throw new Error('Place search is unavailable. Try again shortly.');
+  return (await r.json()).results || [];
+}
+const hay = p => [p.admin1, p.admin2, p.admin3, p.admin4, p.country, p.country_code].filter(Boolean).join(' ').toLowerCase();
+const pickBest = list => list.find(p => p.country_code === 'IE') || list[0];
+const asLoc = p => ({ lat: p.latitude, lon: p.longitude, label: [p.name, p.admin2 || p.admin1, p.country].filter(Boolean).join(', ') });
 async function geocode(q) {
-  const r = await fetch('https://geocoding-api.open-meteo.com/v1/search?count=1&name=' + encodeURIComponent(q));
-  const d = await r.json();
-  if (!d.results || !d.results.length) throw new Error('Place not found');
-  const p = d.results[0];
-  return { lat: p.latitude, lon: p.longitude, label: [p.name, p.admin1, p.country].filter(Boolean).join(', ') };
+  const tokens = q.toLowerCase().split(/[\s,]+/).filter(t => t && !SKIP.has(t));
+  if (!tokens.length) throw new Error('Enter a town or city first.');
+  for (let k = tokens.length; k >= 1; k--) {
+    const rest = tokens.slice(k), results = await search(tokens.slice(0, k).join(' '));
+    const pool = rest.length ? results.filter(p => rest.every(w => hay(p).includes(w))) : results;
+    if (pool.length) return asLoc(pickBest(pool));
+  }
+  const first = await search(tokens[0]);
+  if (first.length) return asLoc(pickBest(first));
+  throw new Error('Place not found. Try just the town name, or "town, county".');
 }
 async function weather(lat, lon) {
   const u = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=apparent_temperature,temperature_2m,relative_humidity_2m` +
