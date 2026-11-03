@@ -1,0 +1,321 @@
+abc
+  <x><!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frenchie Companion</title>
+<meta name="description" content="Safe walk times, breathing log and yearly costs for French Bulldog owners.">
+<style>
+  :root {
+    --bg: #f6f3ee; --card: #ffffff; --ink: #24292f; --muted: #66707a; --line: #e3ddd2;
+    --brand: #2f5d8a; --good: #2e8b57; --care: #d9a400; --high: #e0702b; --avoid: #c0392b; --cold: #3b82c4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14181d; --card: #1d232a; --ink: #e8ebee; --muted: #9aa5af; --line: #2f3841; --brand: #7fb0e0;
+    }
+  }
+  :root[data-theme="dark"] { --bg: #14181d; --card: #1d232a; --ink: #e8ebee; --muted: #9aa5af; --line: #2f3841; --brand: #7fb0e0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, Segoe UI, sans-serif; }
+  header { padding: 20px 16px 8px; max-width: 760px; margin: 0 auto; }
+  h1 { margin: 0; font-size: 26px; }
+  .tag { color: var(--muted); font-size: 14px; }
+  nav { display: flex; gap: 6px; max-width: 760px; margin: 8px auto 0; padding: 0 16px; overflow-x: auto; }
+  nav button { flex: none; padding: 8px 14px; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+               border-radius: 999px; font: inherit; cursor: pointer; }
+  nav button[aria-selected="true"] { background: var(--brand); color: #fff; border-color: var(--brand); }
+  main { max-width: 760px; margin: 0 auto; padding: 12px 16px 60px; }
+  section { display: none; } section.on { display: block; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin: 12px 0; }
+  h2 { margin: 0 0 8px; font-size: 18px; }
+  label { display: block; font-size: 14px; color: var(--muted); margin: 8px 0 2px; }
+  input, select, textarea { width: 100%; padding: 9px; border: 1px solid var(--line); border-radius: 8px; font: inherit;
+                            background: var(--bg); color: var(--ink); }
+  button.primary { background: var(--brand); color: #fff; border: 0; border-radius: 8px; padding: 10px 16px; font: inherit; cursor: pointer; }
+  button.ghost { background: transparent; color: var(--brand); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; font: inherit; cursor: pointer; }
+  .row { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; } .row > * { flex: 1 1 140px; }
+  .verdict { border-radius: 12px; padding: 14px 16px; color: #fff; margin: 10px 0; }
+  .verdict b { font-size: 22px; display: block; }
+  .strip { display: grid; grid-template-columns: repeat(24, 1fr); gap: 2px; margin: 10px 0 4px; }
+  .strip div { height: 38px; border-radius: 4px; position: relative; }
+  .strip div.now { outline: 2px solid var(--ink); outline-offset: 1px; }
+  .hours { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; }
+  .small { font-size: 13px; color: var(--muted); }
+  .alert { border: 2px solid var(--avoid); border-radius: 10px; padding: 10px 12px; color: var(--avoid); font-weight: 600; margin: 8px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; } td, th { padding: 6px 4px; border-bottom: 1px solid var(--line); text-align: left; }
+  .tap { font-size: 20px; padding: 22px; width: 100%; }
+  .big { font-size: 34px; font-weight: 700; }
+  .checks label { display: flex; gap: 8px; align-items: center; color: var(--ink); margin: 4px 0; }
+  .checks input { width: auto; }
+  .disclaimer { font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); margin-top: 24px; padding-top: 12px; }
+  svg.spark { width: 100%; height: 60px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🐾 Frenchie Companion</h1>
+  <div class="tag" id="tag">Safe walks, breathing log and yearly costs for French Bulldog owners</div>
+</header>
+<nav role="tablist" aria-label="Sections">
+  <button role="tab" aria-selected="true" data-tab="walk">Walk safety</button>
+  <button role="tab" aria-selected="false" data-tab="breath">Breathing log</button>
+  <button role="tab" aria-selected="false" data-tab="cost">Yearly costs</button>
+  <button role="tab" aria-selected="false" data-tab="cover">Insurance</button>
+</nav>
+<main>
+  <div class="card">
+    <label for="dogname">Your dog's name</label>
+    <input id="dogname" placeholder="e.g. Bruno" maxlength="30">
+  </div>
+
+  <!-- WALK -->
+  <section id="walk" class="on">
+    <div class="card">
+      <h2>Is it safe to walk today?</h2>
+      <div class="row">
+        <div><label for="place">Town or city</label><input id="place" placeholder="e.g. Cobh" maxlength="60"></div>
+        <button class="primary" id="check">Check the weather</button>
+        <button class="ghost" id="locate">Use my location</button>
+      </div>
+      <div id="walkmsg" class="small" role="status"></div>
+      <div id="walkout"></div>
+    </div>
+  </section>
+
+  <!-- BREATHING -->
+  <section id="breath">
+    <div class="card">
+      <h2>Count breaths (30 seconds)</h2>
+      <p class="small">Best done while your dog is asleep or resting calmly. Press start, then tap once for every breath
+        (one breath = chest rises and falls once). The result is breaths per minute.</p>
+      <div class="big" id="bpm">–</div>
+      <div id="timer" class="small">Ready</div>
+      <button class="primary tap" id="tapbtn">Start</button>
+    </div>
+    <div class="card">
+      <h2>Log today</h2>
+      <div class="row">
+        <div><label for="bpmIn">Breaths per minute</label><input id="bpmIn" type="number" min="0" max="200" inputmode="numeric"></div>
+        <div><label for="logDate">Date</label><input id="logDate" type="date"></div>
+      </div>
+      <div class="checks" id="symptoms">
+        <label><input type="checkbox" value="noisy"> Noisier breathing than usual</label>
+        <label><input type="checkbox" value="snore"> More snoring or snorting than usual</label>
+        <label><input type="checkbox" value="tire"> Tires quickly on walks</label>
+        <label><input type="checkbox" value="cough"> Coughing or gagging</label>
+        <label><input type="checkbox" value="danger"> Collapse, blue or pale gums, or struggling to breathe</label>
+      </div>
+      <label for="note">Note</label><input id="note" maxlength="140">
+      <p><button class="primary" id="savelog">Save entry</button></p>
+      <div id="logalert"></div>
+    </div>
+    <div class="card"><h2>History</h2><svg class="spark" id="spark" viewBox="0 0 300 60" preserveAspectRatio="none"></svg><div id="hist"></div>
+      <p class="small">Stored only in this browser. Showing the same trend to your vet can help.</p></div>
+  </section>
+
+  <!-- COST -->
+  <section id="cost">
+    <div class="card">
+      <h2>Yearly cost planner</h2>
+      <p class="small">Enter what you actually pay. Leave blanks as zero.</p>
+      <div class="row" id="costrows"></div>
+      <p><b>Per month:</b> <span id="permonth">€0</span> &nbsp; <b>Per year:</b> <span id="peryear">€0</span></p>
+      <p class="small">Tip: owners of flat-faced breeds often budget for an unexpected vet bill on top of this. Insurance can
+        reduce the shock, but check what it excludes.</p>
+    </div>
+  </section>
+
+  <!-- INSURANCE -->
+  <section id="cover">
+    <div class="card">
+      <h2>Pet insurance</h2>
+      <p>Flat-faced breeds can be costly to insure, and some policies exclude breathing-related conditions or treat them
+        as pre-existing. Before buying, ask:</p>
+      <ul>
+        <li>Are breathing problems (BOAS) covered, and from when?</li>
+        <li>What is the yearly limit and the excess?</li>
+        <li>Is it a lifetime policy or does cover for a condition end after a year?</li>
+        <li>What waiting periods apply?</li>
+      </ul>
+      <div id="affil" class="small"></div>
+    </div>
+  </section>
+
+  <div class="disclaimer">
+    Frenchie Companion is a general information tool. It is <b>not veterinary advice</b> and cannot diagnose anything.
+    If your dog is struggling to breathe, collapses, or has blue or pale gums, contact a vet immediately.
+    Weather data: Open-Meteo.com.
+    <br><b>Privacy:</b> your dog's name, breathing log and costs are saved only in this browser on your device. We don't have
+    accounts and we don't collect them. When you check the weather, the town you type (or your location, if you allow it) is
+    sent to Open-Meteo to fetch the forecast.
+  </div>
+</main>
+<script>
+// Optional: add affiliate links here once approved, e.g. { name: 'Insurer', url: 'https://...' }. Shown with a disclosure.
+const AFFILIATES = [];
+
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+
+// ---- tabs ----
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('nav button').forEach(x => x.setAttribute('aria-selected', x === b));
+  document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === b.dataset.tab));
+});
+
+// ---- dog name ----
+const nm = () => ($('dogname').value.trim() || 'your dog');
+$('dogname').value = store.get('name', '');
+$('dogname').oninput = () => { store.set('name', $('dogname').value); $('tag').textContent = $('dogname').value.trim() ? `${$('dogname').value.trim()}'s companion` : 'Safe walks, breathing log and yearly costs for French Bulldog owners'; };
+$('dogname').oninput();
+
+// ---- walk safety ----
+// Rule of thumb for flat-faced dogs, using the "feels like" temperature. Not veterinary advice.
+const LEVELS = [
+  { max: 4, key: 'cold', name: 'Cold: short coat, keep it brief', colour: 'var(--cold)', tip: 'Frenchies have short coats. Consider a jumper and keep walks short.' },
+  { max: 16, key: 'good', name: 'Good for a walk', colour: 'var(--good)', tip: 'Comfortable. Still carry water and watch the breathing.' },
+  { max: 20, key: 'care', name: 'Take care', colour: 'var(--care)', tip: 'Keep it short and slow, stay in the shade, bring water.' },
+  { max: 24, key: 'high', name: 'High risk: early or late only', colour: 'var(--high)', tip: 'Walk in the coolest part of the day. No hard exercise. Avoid hot pavement.' },
+  { max: 99, key: 'avoid', name: 'Avoid walks', colour: 'var(--avoid)', tip: 'Too hot. Toilet breaks only, and keep your dog cool indoors. Never leave a dog in a car.' }
+];
+const level = t => LEVELS.find(l => t <= l.max);
+
+async function geocode(q) {
+  const r = await fetch('https://geocoding-api.open-meteo.com/v1/search?count=1&name=' + encodeURIComponent(q));
+  const d = await r.json();
+  if (!d.results || !d.results.length) throw new Error('Place not found');
+  const p = d.results[0];
+  return { lat: p.latitude, lon: p.longitude, label: [p.name, p.admin1, p.country].filter(Boolean).join(', ') };
+}
+async function weather(lat, lon) {
+  const u = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=apparent_temperature,temperature_2m,relative_humidity_2m` +
+            `&hourly=apparent_temperature&forecast_days=1&timezone=auto`;
+  const r = await fetch(u);
+  if (!r.ok) throw new Error('Weather service unavailable');
+  return r.json();
+}
+function render(w, label) {
+  const cur = w.current.apparent_temperature, lv = level(cur);
+  const hrs = w.hourly.apparent_temperature;
+  const nowH = +w.current.time.slice(11, 13);
+  const day = hrs.map((t, h) => ({ h, t, lv: level(t) })).filter(x => x.h >= 6 && x.h <= 22);
+  const best = day.filter(x => x.h >= nowH).sort((a, b) => Math.abs(a.t - 12) - Math.abs(b.t - 12))[0];
+  const out = $('walkout');
+  out.textContent = '';
+  const v = document.createElement('div'); v.className = 'verdict'; v.style.background = lv.colour;
+  const b = document.createElement('b'); b.textContent = `${nm()[0].toUpperCase() + nm().slice(1)}: ${lv.name}`;
+  v.append(b, document.createTextNode(`Feels like ${Math.round(cur)}°C in ${label} (air ${Math.round(w.current.temperature_2m)}°C, humidity ${Math.round(w.current.relative_humidity_2m)}%). ${lv.tip}`));
+  out.append(v);
+  if (best && lv.key !== 'good') {
+    const p = document.createElement('p');
+    p.textContent = `Coolest slot left today: around ${String(best.h).padStart(2, '0')}:00 (feels like ${Math.round(best.t)}°C).`;
+    out.append(p);
+  }
+  const strip = document.createElement('div'); strip.className = 'strip';
+  hrs.forEach((t, h) => { const d = document.createElement('div'); d.style.background = level(t).colour; d.title = `${String(h).padStart(2, '0')}:00, feels like ${Math.round(t)}°C`; if (h === nowH) d.className = 'now'; strip.append(d); });
+  const lab = document.createElement('div'); lab.className = 'hours'; ['00', '06', '12', '18', '23'].forEach(x => { const s = document.createElement('span'); s.textContent = x; lab.append(s); });
+  const leg = document.createElement('div'); leg.className = 'legend';
+  LEVELS.forEach(l => { const s = document.createElement('span'); const i = document.createElement('i'); i.style.background = l.colour; s.append(i, l.name.split(':')[0].split(',')[0]); leg.append(s); });
+  out.append(strip, lab, leg);
+}
+async function run(getLoc) {
+  $('walkmsg').textContent = 'Checking…'; $('walkout').textContent = '';
+  try {
+    const loc = await getLoc();
+    store.set('place', $('place').value);
+    render(await weather(loc.lat, loc.lon), loc.label);
+    $('walkmsg').textContent = '';
+  } catch (e) { $('walkmsg').textContent = e.message || 'Something went wrong'; }
+}
+$('place').value = store.get('place', '');
+$('check').onclick = () => { const q = $('place').value.trim(); if (!q) { $('walkmsg').textContent = 'Enter a town or city first.'; return; } run(() => geocode(q)); };
+$('place').addEventListener('keydown', e => { if (e.key === 'Enter') $('check').click(); });
+$('locate').onclick = () => run(() => new Promise((res, rej) => navigator.geolocation
+  ? navigator.geolocation.getCurrentPosition(p => res({ lat: p.coords.latitude, lon: p.coords.longitude, label: 'your location' }), () => rej(new Error('Location blocked. Type a town instead.')))
+  : rej(new Error('Location is not available. Type a town instead.'))));
+
+// ---- breathing counter ----
+let taps = 0, running = false;
+$('tapbtn').onclick = () => {
+  if (!running) {
+    running = true; taps = 0; $('bpm').textContent = '0'; let left = 30;
+    $('tapbtn').textContent = 'Tap per breath'; $('timer').textContent = `${left}s left`;
+    const iv = setInterval(() => {
+      left--; $('timer').textContent = `${left}s left`;
+      if (left <= 0) { clearInterval(iv); running = false; const bpm = taps * 2; $('bpm').textContent = bpm + ' / min'; $('timer').textContent = 'Done. Tap Start to repeat.'; $('tapbtn').textContent = 'Start'; $('bpmIn').value = bpm; }
+    }, 1000);
+  } else { taps++; $('bpm').textContent = String(taps); }
+};
+
+// ---- breathing log ----
+$('logDate').value = new Date().toISOString().slice(0, 10);
+const SYM = { noisy: 'noisier breathing', snore: 'more snoring', tire: 'tires quickly', cough: 'coughing', danger: 'DANGER SIGNS' };
+function renderLog() {
+  const log = store.get('log', []).sort((a, b) => a.date.localeCompare(b.date));
+  const h = $('hist'); h.textContent = '';
+  if (!log.length) { h.textContent = 'No entries yet.'; $('spark').textContent = ''; return; }
+  const t = document.createElement('table');
+  [...log].reverse().slice(0, 30).forEach(e => {
+    const tr = t.insertRow();
+    tr.insertCell().textContent = e.date;
+    tr.insertCell().textContent = e.bpm ? e.bpm + '/min' : '–';
+    tr.insertCell().textContent = [...e.sym.map(s => SYM[s]), e.note].filter(Boolean).join('; ');
+    const d = tr.insertCell(); const x = document.createElement('button'); x.className = 'ghost'; x.textContent = '✕'; x.setAttribute('aria-label', 'Delete entry');
+    x.onclick = () => { store.set('log', store.get('log', []).filter(y => y.id !== e.id)); renderLog(); }; d.append(x);
+  });
+  h.append(t);
+  const pts = log.filter(e => e.bpm), sp = $('spark'); sp.textContent = '';
+  if (pts.length > 1) {
+    const max = Math.max(...pts.map(e => e.bpm), 40), min = Math.min(...pts.map(e => e.bpm), 10);
+    const xy = pts.map((e, i) => `${(i / (pts.length - 1)) * 290 + 5},${55 - ((e.bpm - min) / (max - min || 1)) * 50}`).join(' ');
+    sp.innerHTML = `<polyline fill="none" stroke="var(--brand)" stroke-width="2" points="${xy}"/>`;
+  }
+}
+$('savelog').onclick = () => {
+  const sym = [...document.querySelectorAll('#symptoms input:checked')].map(c => c.value);
+  const bpm = parseInt($('bpmIn').value, 10) || null;
+  if (!bpm && !sym.length && !$('note').value.trim()) { $('logalert').textContent = 'Add a breath count, a symptom or a note first.'; return; }
+  const log = store.get('log', []);
+  log.push({ id: Date.now(), date: $('logDate').value || new Date().toISOString().slice(0, 10), bpm, sym, note: $('note').value.trim().slice(0, 140) });
+  store.set('log', log);
+  document.querySelectorAll('#symptoms input').forEach(c => c.checked = false); $('note').value = ''; $('bpmIn').value = '';
+  const al = $('logalert'); al.textContent = '';
+  if (sym.includes('danger')) { const d = document.createElement('div'); d.className = 'alert'; d.textContent = `Collapse, blue or pale gums, or struggling to breathe is an emergency. Contact a vet now.`; al.append(d); }
+  else if (sym.length >= 2) { const d = document.createElement('div'); d.className = 'small'; d.textContent = `Several changes noted. Consider mentioning them to your vet soon.`; al.append(d); }
+  renderLog();
+};
+renderLog();
+
+// ---- costs ----
+const COSTS = [['Food', 'food'], ['Treats & toys', 'treats'], ['Insurance', 'ins'], ['Routine vet (yearly)', 'vet', 'yr'], ['Vaccines & flea/worm (yearly)', 'vacc', 'yr'], ['Grooming & skin care', 'groom'], ['Boarding / walker', 'board'], ['Other', 'other']];
+const cs = store.get('costs', {});
+COSTS.forEach(([label, id, per]) => {
+  const d = document.createElement('div'); const l = document.createElement('label'); l.textContent = `${label} (€ ${per ? 'per year' : 'per month'})`; l.htmlFor = 'c_' + id;
+  const i = document.createElement('input'); i.id = 'c_' + id; i.type = 'number'; i.min = 0; i.inputMode = 'decimal'; i.value = cs[id] || '';
+  i.oninput = totals; d.append(l, i); $('costrows').append(d);
+});
+function totals() {
+  let m = 0, c = {};
+  COSTS.forEach(([, id, per]) => { const v = Math.max(0, parseFloat($('c_' + id).value) || 0); c[id] = v || ''; m += per ? v / 12 : v; });
+  store.set('costs', c);
+  $('permonth').textContent = '€' + m.toFixed(0); $('peryear').textContent = '€' + (m * 12).toFixed(0);
+}
+totals();
+
+// ---- affiliates (hidden until configured) ----
+if (AFFILIATES.length) {
+  const a = $('affil'); a.textContent = 'Some links below earn us a commission at no cost to you. We are not insurance advisers; compare policy terms yourself.';
+  const ul = document.createElement('ul');
+  AFFILIATES.forEach(x => { const li = document.createElement('li'), l = document.createElement('a'); l.href = x.url; l.rel = 'sponsored noopener'; l.target = '_blank'; l.textContent = x.name; li.append(l); ul.append(li); });
+  a.append(ul);
+}
+</script>
+</body>
+</html>
